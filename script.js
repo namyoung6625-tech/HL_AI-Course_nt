@@ -159,6 +159,11 @@ function syncSlotSelectOptions() {
   });
 }
 
+function clearSlotError() {
+  const el = document.getElementById("err-slots");
+  if (el) el.textContent = "";
+}
+
 /** “신청 시작하기”, “처음으로” 버튼 */
 function bindStartAndRestart() {
   document.getElementById("btnStart").addEventListener("click", () => {
