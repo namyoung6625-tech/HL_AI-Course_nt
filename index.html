@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--
+  ============================================
+  index.html  —  수강신청 페이지의 “뼈대” 파일
+  ============================================
+  HTML은 웹페이지의 구조(제목, 문단, 버튼, 입력칸 등)를 정의합니다.
+  이 파일과 같은 폴더에 style.css, script.js가 있어야 화면이 예쁘게 보이고 동작합니다.
+-->
+<html lang="ko">
+<head>
+  <!-- 문자 인코딩: 한글이 깨지지 않게 UTF-8로 지정 -->
+  <meta charset="UTF-8" />
+  <!-- 모바일에서도 잘 보이게 뷰포트 설정 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수강신청</title>
+  <!-- Pretendard: 읽기 좋은 고급스러운 고딕 (CDN). 없어도 시스템 글꼴로 대체됩니다. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous" />
+  <!-- 이 페이지의 디자인은 style.css 파일에 모아 두었습니다 -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page">
+  <!--
+    전체를 감싸는 컨테이너: 가운데 정렬·최대 너비 제한 등은 CSS에서 처리합니다.
+  -->
+  <div class="app-shell">
+    <!-- 상단: 제목 영역 (hero) — 여백과 타이포 중심의 미니멀 헤더 -->
+    <header class="site-header">
+      <div class="hero">
+        <p class="site-badge">Course Apply</p>
+        <!-- 아래 h1 안의 문구는 사용자가 바꿀 수 있는 대표 제목입니다 -->
+        <h1 class="site-title">팀원 업무혁신 AI 실전과정 수강신청 페이지</h1>
+        <p class="site-sub">
+          
+        </p>
+      </div>
+    </header>
+
+    <!--
+      진행 단계 표시 영역
+      - JS가 현재 단계에 맞게 클래스를 바꿔 주면 색이 바뀝니다.
+      - 각 li 안의 마커(원)·라벨은 CSS로 꾸밉니다.
+    -->
+    <nav class="progress-wrap" aria-label="신청 진행 단계">
+      <div class="progress-track">
+        <ol class="progress-steps" id="progressSteps">
+          <li class="progress-step" data-progress-index="0">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">시작</span>
+          </li>
+          <li class="progress-step" data-progress-index="1">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">개인정보</span>
+          </li>
+          <li class="progress-step" data-progress-index="2">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">과정 선택</span>
+          </li>
+          <li class="progress-step" data-progress-index="3">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">사전 서베이</span>
+          </li>
+          <li class="progress-step" data-progress-index="4">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">차수 선택</span>
+          </li>
+          <li class="progress-step" data-progress-index="5">
+            <span class="progress-step__marker" aria-hidden="true"></span>
+            <span class="progress-step__label">완료</span>
+          </li>
+        </ol>
+        <div class="progress-bar" role="presentation">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="panels">
+      <!-- ===================== 0단계: 환영 화면 ===================== -->
+      <section class="panel panel--active" id="panel-welcome" data-step="0">
+        <div class="card">
+          <h2 class="card-title">신청 안내</h2>
+          <p class="card-lead">
+            아래 절차에 따라 정보를 입력하고 과정과 차수를 선택해 주세요. 수강신청 후 과정 적합도 확인을 통해 수강이 확정됩니다. 정원을 초과한 경우 랜덤 추첨을 통해 선발합니다.
+          </p>
+          <ul class="info-list">
+            <li>모든 입력 항목은 필수입니다.</li>
+            <li>업무효율화 과정은 사전 서베이 5개 항목 중 3개 이상 해당할 경우 신청 가능합니다.</li>
+            <li>업무자동화 과정은 사전 서베이 5개 항목을 모두 충족하고 자동화 주제를 작성해야 신청 가능합니다.</li>
+            <li>희망 차수는 1지망 필수, 2지망과 3지망은 선택 입력입니다.</li>
+          </ul>
+          <div class="actions actions--end">
+            <button type="button" class="btn btn--primary" id="btnStart">
+              신청 시작하기
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 1단계: 개인정보 ===================== -->
+      <section class="panel" id="panel-personal" data-step="1" aria-hidden="true">
+        <div class="card">
+          <h2 class="card-title">개인정보 입력</h2>
+          <p class="card-lead">신청에 필요한 기본 정보를 입력해 주세요.</p>
+
+          <form class="form" id="formPersonal" novalidate>
+            <div class="field">
+              <label for="company">회사명 <span class="req">*</span></label>
+              <input type="text" id="company" name="company" autocomplete="organization" required />
+              <p class="field-error" id="err-company" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="email">이메일 <span class="req">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+              <p class="field-error" id="err-email" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="fullname">이름 <span class="req">*</span></label>
+              <input type="text" id="fullname" name="fullname" autocomplete="name" required />
+              <p class="field-error" id="err-fullname" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="job">직무 <span class="req">*</span></label>
+              <input type="text" id="job" name="job" autocomplete="organization-title" required />
+              <p class="field-error" id="err-job" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="reason">신청 사유 <span class="req">*</span></label>
+              <textarea id="reason" name="reason" rows="4" required></textarea>
+              <p class="field-error" id="err-reason" role="alert"></p>
+            </div>
+          </form>
+
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" data-nav="prev">이전</button>
+            <button type="button" class="btn btn--primary" data-nav="next" data-context="personal">
+              다음
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 2단계: 과정 선택 ===================== -->
+      <section class="panel" id="panel-course" data-step="2" aria-hidden="true">
+        <div class="card">
+          <h2 class="card-title">과정 선택</h2>
+          <p class="card-lead">수강하실 과정을 하나 선택해 주세요. 이후 사전 서베이 문항이 달라집니다.</p>
+
+          <fieldset class="choice-group" id="courseChoice">
+            <legend class="visually-hidden">과정 번호</legend>
+            <label class="choice-card">
+              <input type="radio" name="course" value="1" />
+              <span class="choice-card__title">업무효율화 과정</span>
+              <span class="choice-card__desc">업무 생산성을 높이는 실전 중심 커리큘럼</span>
+            </label>
+            <label class="choice-card">
+              <input type="radio" name="course" value="2" />
+              <span class="choice-card__title">업무자동화 과정</span>
+              <span class="choice-card__desc">반복 업무 자동화를 목표로 하는 실습형 커리큘럼</span>
+            </label>
+          </fieldset>
+          <p class="field-error" id="err-course" role="alert"></p>
+
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" data-nav="prev">이전</button>
+            <button type="button" class="btn btn--primary" data-nav="next" data-context="course">
+              다음
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 3단계: 사전 서베이 ===================== -->
+      <section class="panel" id="panel-survey" data-step="3" aria-hidden="true">
+        <div class="card">
+          <h2 class="card-title">사전 서베이</h2>
+          <p class="card-lead" id="surveyIntro">
+            <!-- 안내 문구는 과정 선택에 따라 JS가 자동으로 바꿉니다. -->
+            안내 문구를 불러오는 중입니다...
+          </p>
+
+          <!--
+            중요: 서베이 문항은 HTML에 고정하지 않고 script.js에서 매번 "새로 렌더링"합니다.
+            이렇게 하면 과거 문항이 남거나 중복되는 문제를 원천 차단할 수 있습니다.
+          -->
+          <div class="checkbox-group" id="surveyCourse1" hidden></div>
+          <div class="checkbox-group" id="surveyCourse2" hidden></div>
+
+          <!-- 2번 과정 전용: 주관식 입력 3개 (2번 과정일 때만 보이게 JS가 제어합니다) -->
+          <div id="surveyCourse2Details" hidden>
+            <div class="form" id="course2DetailsForm">
+              <div class="field">
+                <label for="workRepeat">본인이 수행하는 업무 중 반복적으로 수행하는 작업 <span class="req">*</span></label>
+                <textarea id="workRepeat" rows="3" placeholder="예) 매주 보고서 작성, 데이터 정리 등"></textarea>
+                <p class="field-error" id="err-workRepeat" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="workSteps">업무 수행 과정 단계별 작성 <span class="req">*</span></label>
+                <textarea id="workSteps" rows="4" placeholder="예) 1) 자료 수집 → 2) 정리 → 3) 공유 ..."></textarea>
+                <p class="field-error" id="err-workSteps" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="workAutomation">자동화 가능 영역 <span class="req">*</span></label>
+                <textarea id="workAutomation" rows="3" placeholder="예) 템플릿 자동 생성, 알림 자동 발송 등"></textarea>
+                <p class="field-error" id="err-workAutomation" role="alert"></p>
+              </div>
+            </div>
+          </div>
+
+          <p class="hint" id="surveyCountHint">현재 0개 선택됨 · 3개 이상 필요</p>
+
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" data-nav="prev">이전</button>
+            <button type="button" class="btn btn--primary" data-nav="next" data-context="survey">
+              다음
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 4단계: 차수 선택 ===================== -->
+      <section class="panel" id="panel-slots" data-step="4" aria-hidden="true">
+        <div class="card">
+          <h2 class="card-title">희망 차수 선택</h2>
+          <p class="card-lead">1지망·2지망·3지망을 각각 다르게 선택해 주세요. 1지망만 있을 경우, 1지망만 선택하시면 됩니다. </p>
+
+          <div class="slot-grid">
+            <div class="field">
+              <label for="slotFirst">1지망 <span class="req">*</span></label>
+              <select id="slotFirst" class="select" required></select>
+            </div>
+            <div class="field">
+              <label for="slotSecond">2지망 <span class="req">*</span></label>
+              <select id="slotSecond" class="select" required></select>
+            </div>
+            <div class="field">
+              <label for="slotThird">3지망 <span class="req">*</span></label>
+              <select id="slotThird" class="select" required></select>
+            </div>
+          </div>
+          <p class="field-error" id="err-slots" role="alert"></p>
+
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" data-nav="prev">이전</button>
+            <button type="button" class="btn btn--primary" data-nav="next" data-context="slots">
+              다음
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 5단계: 완료 ===================== -->
+      <section class="panel" id="panel-done" data-step="5" aria-hidden="true">
+        <div class="card card--success">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h2 class="card-title">신청이 완료되었습니다</h2>
+          <p class="card-lead">
+            제출해 주신 내용을 바탕으로 적합도 확인 및 추첨을 진행하며,
+            대상자 선정 결과는 4월 30일(목) 안내드리겠습니다.
+          </p>
+          <p class="card-lead">
+            관련 문의사항은 HL인재개발원 김범기 매니저에게 연락해 주시기 바랍니다.
+            </p>
+            <p class="card-lead">
+              beomki.kim@hlcompany.com, 031-899-4704
+          </p>
+          <div class="summary" id="summaryBox" aria-live="polite"></div>
+          <div class="actions actions--end">
+            <button type="button" class="btn btn--primary" id="btnRestart">처음으로</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <small>© 수강신청 데모 · 로컬에서 열어 사용하세요.</small>
+    </footer>
+  </div>
+
+  <!-- ===================== 커스텀 모달 (팝업) ===================== -->
+  <!--
+    화면 위에 떠 있는 창입니다. alert() 대신 이 박스를 보이거나 숨깁니다.
+    배경 어둡게: .modal-backdrop, 내용: .modal-dialog
+  -->
+  <div class="modal" id="modalHard" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div
+      class="modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalHardTitle"
+    >
+      <h3 id="modalHardTitle" class="modal-title">수강이 어렵습니다</h3>
+      <p class="modal-body">
+        사전 서베이에서 3개 미만만 선택하셨습니다. 관심 항목을 3개 이상 선택한 뒤 다시 시도해 주세요.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn--primary" data-close-modal>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 일반 안내용 모달 (중복 차수, 빈 선택 등) -->
+  <div class="modal" id="modalInfo" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div
+      class="modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalInfoTitle"
+    >
+      <h3 id="modalInfoTitle" class="modal-title">알림</h3>
+      <p class="modal-body" id="modalInfoBody"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn--primary" data-close-modal>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 동작(단계 이동, 검사 등)은 script.js에 있습니다. body 맨 아래에 두는 것이 안전합니다. -->
+  <script src="script.js"></script>
+</body>
+</html>
