@@ -703,7 +703,9 @@ async function submitToNetlify() {
 
   const res = await fetch("/", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
     body: encodeFormData(payload)
   });
 
