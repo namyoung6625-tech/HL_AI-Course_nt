@@ -650,15 +650,6 @@ function updateUIStep() {
   goToStep(0);
 }
 
-
-const result = await response.json();
-
-if (!result.ok) {
-  const error = new Error(result.error || "시트 저장에 실패했습니다.");
-  error.code = result.code || "";
-  error.debug = result.debug || null;
-  throw error;
-}
 }
 function encodeFormData(data) {
   return Object.keys(data)
