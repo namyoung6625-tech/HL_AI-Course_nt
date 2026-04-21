@@ -650,7 +650,6 @@ function updateUIStep() {
   goToStep(0);
 }
 
-}
 function encodeFormData(data) {
   return Object.keys(data)
     .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(data[k]))
